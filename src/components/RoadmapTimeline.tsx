@@ -4,7 +4,7 @@ import {
   Code, 
   BookOpen, 
   Layers, 
-  Paint, 
+  Palette, 
   Star, 
   Code2, 
   FileText, 
@@ -187,7 +187,7 @@ const RoadmapTimeline: React.FC = () => {
     {
       title: "Styling & CSS Frameworks",
       description: "Master advanced styling with Tailwind CSS, Sass, and modern CSS techniques.",
-      icon: <Paint className="h-5 w-5" />,
+      icon: <Palette className="h-5 w-5" />,
       position: "right",
       status: "locked",
       progress: 0,
