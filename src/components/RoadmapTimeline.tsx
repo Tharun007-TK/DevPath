@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Code, 
   BookOpen, 
@@ -12,11 +12,15 @@ import {
   CheckSquare, 
   PlayCircle, 
   ListVideo, 
+  BookOpen as BookIcon,
+  MessageSquare,
+  Trophy,
 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -59,6 +63,7 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
   modules
 }) => {
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("modules");
 
   const handleStartLesson = () => {
     if (status === 'locked') {
@@ -104,19 +109,59 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
             
             <Progress value={progress} className="mb-6 h-2" />
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              {modules.slice(0, 4).map((module, idx) => (
-                <div 
-                  key={idx} 
-                  className={`flex items-center gap-2 p-3 rounded-lg text-sm border ${
-                    module.completed ? 'border-green-200 bg-green-50 text-green-700' : 'border-gray-200'
-                  }`}
-                >
-                  <ModuleIcon type={module.type} />
-                  <span className="truncate">{module.title}</span>
+            <Tabs defaultValue="modules" className="mb-6">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="modules">Modules</TabsTrigger>
+                <TabsTrigger value="resources" disabled={status === 'locked'}>Resources</TabsTrigger>
+                <TabsTrigger value="community" disabled={status === 'locked'}>Community</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="modules" className="mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {modules.slice(0, 4).map((module, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`flex items-center gap-2 p-3 rounded-lg text-sm border ${
+                        module.completed ? 'border-green-200 bg-green-50 text-green-700' : 'border-gray-200'
+                      }`}
+                    >
+                      <ModuleIcon type={module.type} />
+                      <span className="truncate">{module.title}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </TabsContent>
+              
+              <TabsContent value="resources" className="mt-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 p-3 rounded-lg text-sm border">
+                    <BookIcon className="h-4 w-4 text-blue-500" />
+                    <span>Documentation & Reading Materials</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-3 rounded-lg text-sm border">
+                    <PlayCircle className="h-4 w-4 text-red-500" />
+                    <span>Tutorial Videos</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-3 rounded-lg text-sm border">
+                    <Code className="h-4 w-4 text-purple-500" />
+                    <span>Practice Code Examples</span>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="community" className="mt-4">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 p-3 rounded-lg text-sm border">
+                    <MessageSquare className="h-4 w-4 text-green-500" />
+                    <span>Discussion Forum</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-3 rounded-lg text-sm border">
+                    <Trophy className="h-4 w-4 text-amber-500" />
+                    <span>Leaderboard & Challenges</span>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
             
             <div className="mt-auto">
               <Button 
