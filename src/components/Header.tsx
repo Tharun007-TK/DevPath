@@ -1,17 +1,26 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
 
 const Header = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, signOut } = useAuth();
 
   const handleSignIn = () => {
+    navigate('/auth');
+  };
+
+  const handleSignOut = () => {
+    signOut();
     toast({
-      title: "Coming Soon",
-      description: "Sign in functionality will be available in a future update.",
+      title: "Signed out",
+      description: "You have been successfully signed out.",
     });
+    navigate('/');
   };
 
   return (
@@ -27,12 +36,28 @@ const Header = () => {
             <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">Roadmap</Link>
             <Link to="/resources" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Resources</Link>
             <Link to="/about" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">About</Link>
+            {isAuthenticated && (
+              <Link to="/dashboard" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Dashboard</Link>
+            )}
           </nav>
         </div>
         
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={handleSignIn}>Sign In</Button>
-          <Button size="sm" onClick={handleSignIn}>Get Started</Button>
+          {isAuthenticated ? (
+            <>
+              <span className="text-sm hidden md:block">
+                Welcome, {user?.name}
+              </span>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={handleSignIn}>Sign In</Button>
+              <Button size="sm" onClick={handleSignIn}>Get Started</Button>
+            </>
+          )}
         </div>
       </div>
     </header>
